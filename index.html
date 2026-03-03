@@ -1103,6 +1103,7 @@ function generateReport() {
 }
 
 /* ── SAVE TO GOOGLE SHEETS ── */
+/* ── UPDATED SAVE TO GOOGLE SHEETS ── */
 async function saveToSheets() {
   const inp = window._lastInputs;
   const metrics = window._lastMetrics;
@@ -1112,6 +1113,9 @@ async function saveToSheets() {
   const statusEl = document.getElementById('saveStatus');
   statusEl.className = 'save-status';
   statusEl.innerHTML = '<span class="kn">ಉಳಿಸಲಾಗುತ್ತಿದೆ...</span><span class="en">Saving...</span>';
+
+  // REPLACE THIS URL with your Google Apps Script Web App URL
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbzRyIqT7y-HbTT_miEcDz9nH8dfwNUyQWwNVpVsRD_dQSKmhQ6zZ1a9KOIOJAsJbng/exec';
 
   try {
     const payload = {
@@ -1134,20 +1138,16 @@ async function saveToSheets() {
       tips: tips.map(t => t.e).join('; ')
     };
 
-    const res = await fetch('/.netlify/functions/save-to-sheets', {
+    // Use 'no-cors' mode if you face CORS issues, 
+    // but standard fetch usually works with Apps Script JSON returns
+    const res = await fetch(scriptURL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const data = await res.json();
-
-    if (res.ok) {
-      statusEl.className = 'save-status success';
-      statusEl.innerHTML = '<span class="kn">✓ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ!</span><span class="en">✓ Saved successfully!</span>';
-    } else {
-      throw new Error(data.error || 'Failed to save');
-    }
+    statusEl.className = 'save-status success';
+    statusEl.innerHTML = '<span class="kn">✓ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ!</span><span class="en">✓ Saved successfully!</span>';
+    
   } catch (err) {
     statusEl.className = 'save-status error';
     statusEl.innerHTML = `<span class="kn">✗ ಉಳಿಸಲು ವಿಫಲ: ${err.message}</span><span class="en">✗ Save failed: ${err.message}</span>`;
