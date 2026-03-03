@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ಆರೋಗ್ಯ ಸಲಹೆ | Health Action Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple:       #6b3fa0;
+    --purple-mid:   #8b5cc8;
+    --purple-light: #b48ee0;
+    --lavender:     #e8daf5;
+    --lavender-pale:#f4eefb;
+    --deep:         #3b1f6b;
+    --cream:        #faf7ff;
+    --mint:         #ede8f8;
+    --sage:         #5a4080;
+    --text:         #211433;
+    --muted:        #6b5c88;
+    --shadow:       rgba(107, 63, 160, 0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lora', 'Noto Sans Kannada', serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(180,142,224,0.14) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(232,218,245,0.55) 0%, transparent 50%);
+  }
+
+  /* ── LANGUAGE TOGGLE BAR ── */
+  .lang-bar {
+    background: var(--deep);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.45rem 1.25rem;
+    gap: 0.4rem;
+  }
+
+  .lang-bar > span {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.6);
+    font-family: 'Lora', serif;
+    font-style: italic;
+    margin-right: 0.35rem;
+  }
+
+  .lang-btn {
+    padding: 0.28rem 0.85rem;
+    border-radius: 20px;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    background: transparent;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-family: 'Noto Sans Kannada', sans-serif;
+    transition: background 0.18s, color 0.18s;
+  }
+
+  .lang-btn.active {
+    background: white;
+    color: var(--deep);
+    font-weight: 700;
+    border-color: white;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--deep) 0%, var(--purple) 55%, var(--purple-light) 100%);
+    padding: 1.75rem 1.5rem 2.25rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .header-tagline {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-family: 'Lora', serif;
+    font-style: italic;
+  }
+
+  header h1 {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+  }
+
+  header h2 {
+    font-family: 'Lora', serif;
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .subtitle {
+    margin-top: 0.75rem;
+    background: rgba(255,255,255,0.15);
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.88);
+    font-family: 'Lora', serif;
+    font-style: italic;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .intro-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.15rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--purple-light);
+    box-shadow: 0 2px 12px var(--shadow);
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-label {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--purple);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--lavender);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--purple);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .field-group { margin-bottom: 1.1rem; }
+
+  .field-group label {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+    font-family: 'Noto Sans Kannada', sans-serif;
+  }
+
+  .field-group input,
+  .field-group select {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid #d4c0e8;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'Lora', serif;
+    color: var(--text);
+    background: var(--cream);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .field-group input:focus,
+  .field-group select:focus {
+    outline: none;
+    border-color: var(--purple-light);
+    box-shadow: 0 0 0 3px rgba(107,63,160,0.1);
+    background: white;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .bp-row  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+
+  .select-wrapper { position: relative; }
+  .select-wrapper::after {
+    content: '▾';
+    position: absolute;
+    right: 0.9rem; top: 50%;
+    transform: translateY(-50%);
+    color: var(--purple);
+    pointer-events: none;
+    font-size: 0.8rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--deep), var(--purple));
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-family: 'Noto Sans Kannada', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(59,31,107,0.3);
+    line-height: 1.5;
+  }
+
+  .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59,31,107,0.35); }
+  .submit-btn:active { transform: translateY(0); }
+
+  /* ── RESULTS ── */
+  #results { display: none; animation: fadeSlideIn 0.4s ease; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .results-header {
+    background: linear-gradient(135deg, var(--sage), var(--purple));
+    color: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .results-header h3 {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .results-header p {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    opacity: 0.85;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+  }
+
+  .metric-chip {
+    background: white;
+    border-radius: 12px;
+    padding: 0.75rem;
+    box-shadow: 0 2px 8px var(--shadow);
+    border-top: 3px solid var(--purple-light);
+  }
+
+  .metric-chip.good { border-top-color: #5ab88a; }
+  .metric-chip.warn { border-top-color: #f0a04a; }
+  .metric-chip.bad  { border-top-color: #d9534f; }
+
+  .metric-chip .val   { font-size: 1.3rem; font-family: 'Lora', serif; font-weight: 600; color: var(--text); display: block; }
+  .metric-chip .lbl   { font-size: 0.7rem; color: var(--muted); font-family: 'Noto Sans Kannada', sans-serif; display: block; }
+  .metric-chip .range { font-size: 0.65rem; color: #aaa; font-family: 'Lora', serif; font-style: italic; margin-top: 0.1rem; display: block; }
+
+  .action-plan-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 16px var(--shadow);
+    margin-bottom: 1rem;
+  }
+
+  .action-plan-card h4 {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    color: var(--purple);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .tip-item {
+    background: var(--lavender-pale);
+    border-radius: 12px;
+    padding: 0.85rem 2.5rem 0.85rem 1rem;
+    margin-bottom: 0.65rem;
+    border-left: 3px solid var(--purple);
+    position: relative;
+  }
+
+  .tip-item:last-child { margin-bottom: 0; }
+
+  .tip-primary {
+    font-size: 0.88rem;
+    color: var(--deep);
+    font-weight: 600;
+    line-height: 1.55;
+  }
+
+  .tip-secondary {
+    font-family: 'Lora', serif;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 0.3rem;
+  }
+
+  .tip-icon {
+    position: absolute;
+    right: 0.75rem; top: 0.75rem;
+    font-size: 1.1rem;
+    opacity: 0.5;
+  }
+
+  /* ── REPORT SECTION ── */
+  .report-section {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 16px var(--shadow);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .report-section h4 {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    color: var(--purple);
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .report-section p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'Lora', serif;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .report-btn {
+    padding: 0.65rem 1.5rem;
+    background: linear-gradient(135deg, var(--deep), var(--purple));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-family: 'Noto Sans Kannada', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 3px 10px rgba(59,31,107,0.25);
+    margin-bottom: 0.5rem;
+  }
+
+  .report-btn:hover { transform: translateY(-1px); }
+
+  .save-status {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'Lora', serif;
+    font-style: italic;
+    margin-top: 0.5rem;
+    min-height: 1.2em;
+  }
+
+  .save-status.success { color: #5ab88a; font-weight: 600; }
+  .save-status.error   { color: #d9534f; }
+
+  /* ── PRINT REPORT STYLES ── */
+  @media print {
+    body { background: white !important; }
+    .lang-bar, header, .intro-card, .form-card, .report-section,
+    .disclaimer, .reset-btn, footer, .submit-btn, .error-msg,
+    .results-header, .metrics-grid, .action-plan-card { display: none !important; }
+    #results { display: block !important; }
+    #printableReport { display: block !important; }
+    .report-container { box-shadow: none; border: 1px solid #ccc; }
+    main { max-width: 100%; padding: 0; }
+  }
+
+  #printableReport { display: none; }
+
+  .report-container {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-bottom: 1rem;
+    border: 2px solid var(--lavender);
+  }
+
+  .report-header {
+    text-align: center;
+    border-bottom: 3px solid var(--purple);
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .report-header h2 {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    color: var(--deep);
+    font-size: 1.15rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .report-header .company-name {
+    font-family: 'Lora', serif;
+    font-size: 0.82rem;
+    color: var(--purple);
+    font-weight: 600;
+  }
+
+  .report-header .event-tag {
+    font-family: 'Lora', serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 0.2rem;
+  }
+
+  .report-employee-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    background: var(--lavender-pale);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.82rem;
+  }
+
+  .report-employee-info .info-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .report-employee-info .info-label {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .report-employee-info .info-value {
+    font-family: 'Lora', serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .report-metrics-title,
+  .report-tips-title {
+    font-family: 'Noto Sans Kannada', sans-serif;
+    color: var(--purple);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.65rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--lavender);
+  }
+
+  .report-metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .report-metric {
+    text-align: center;
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 0.6rem 0.4rem;
+    border-top: 3px solid var(--purple-light);
+  }
+
+  .report-metric.good { border-top-color: #5ab88a; }
+  .report-metric.warn { border-top-color: #f0a04a; }
+  .report-metric.bad  { border-top-color: #d9534f; }
+
+  .report-metric .r-val { font-family: 'Lora', serif; font-size: 1.05rem; font-weight: 600; color: var(--text); display: block; }
+  .report-metric .r-lbl { font-size: 0.62rem; color: var(--muted); font-family: 'Noto Sans Kannada', sans-serif; display: block; }
+
+  .report-tip-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.25rem;
+  }
+
+  .report-tip-list li {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    padding: 0.45rem 0.65rem;
+    background: var(--lavender-pale);
+    border-radius: 8px;
+    margin-bottom: 0.35rem;
+    border-left: 3px solid var(--purple);
+    font-family: 'Lora', serif;
+  }
+
+  .report-footer {
+    text-align: center;
+    border-top: 2px solid var(--lavender);
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .report-footer .disclaimer-text {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-family: 'Lora', serif;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .report-footer .generated-at {
+    font-size: 0.62rem;
+    color: #aaa;
+    font-family: 'Lora', serif;
+    margin-top: 0.35rem;
+  }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    background: #faf8ff;
+    border: 1px solid var(--lavender);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    font-size: 0.75rem;
+    color: #5a4080;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-family: 'Lora', serif;
+    font-style: italic;
+  }
+
+  .disclaimer strong { font-style: normal; font-family: 'Noto Sans Kannada', sans-serif; }
+
+  .reset-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background: transparent;
+    color: var(--purple);
+    border: 2px solid var(--purple-light);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-family: 'Noto Sans Kannada', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0.75rem;
+  }
+
+  .reset-btn:hover { background: var(--lavender-pale); }
+
+  .error-msg {
+    color: var(--purple);
+    font-size: 0.78rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-family: 'Lora', serif;
+    display: none;
+  }
+
+  footer {
+    background: var(--deep);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    margin-top: 1rem;
+  }
+
+  footer strong {
+    color: var(--lavender);
+    font-style: normal;
+    font-family: 'Noto Sans Kannada', sans-serif;
+    font-size: 0.78rem;
+  }
+
+  /* ── LANGUAGE VISIBILITY ── */
+  .kn { display: inline; font-family: 'Noto Sans Kannada', sans-serif; }
+  .en { display: none; }
+
+  body.lang-en .kn { display: none; }
+  body.lang-en .en { display: inline; }
+</style>
+</head>
+<body class="lang-kn">
+
+<!-- LANGUAGE TOGGLE -->
+<div class="lang-bar">
+  <span>Language / ಭಾಷೆ:</span>
+  <button class="lang-btn active" id="btnKn" onclick="setLang('kn')">ಕನ್ನಡ</button>
+  <button class="lang-btn"        id="btnEn" onclick="setLang('en')">English</button>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-tagline">
+    <span class="kn">ಕೊಟ್ಟು ಪಡೆ · </span>Give to Gain
+  </div>
+  <h1>
+    <span class="kn">ನನ್ನ ಆರೋಗ್ಯ, ನನ್ನ ಕ್ರಿಯೆ</span>
+    <span class="en" style="font-family:'Lora',serif;font-style:italic;font-weight:600;">My Health, My Action</span>
+  </h1>
+  <h2 class="kn">My Health, My Action</h2>
+  <div class="subtitle">
+    💜 <span class="kn">ಆರೋಗ್ಯ ಉಪಕರಣ · </span>Women's Health Tool · IWD 2026
+  </div>
+</header>
+
+<main>
+  <div class="intro-card">
+    <span class="kn">ನಿಮ್ಮ ಆರೋಗ್ಯ ಮಾಹಿತಿ ನಮೂದಿಸಿ, ನಿಮಗಾಗಿ ವೈಯಕ್ತಿಕ ಸಲಹೆ ಪಡೆಯಿರಿ.<br>Enter your measurements to receive a personalized health action plan in Kannada &amp; English.</span>
+    <span class="en">Enter your health measurements below to get a simple, personalized action plan tailored just for you.</span>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card" id="formSection">
+
+    <div class="section-label">
+      <span class="kn">ಉದ್ಯೋಗಿ ಮಾಹಿತಿ · Employee Details</span>
+      <span class="en">Employee Details</span>
+    </div>
+
+    <div class="two-col">
+      <div class="field-group">
+        <label>
+          <span class="kn">ಹೆಸರು </span><span class="en">Name </span>
+        </label>
+        <input type="text" id="empName" placeholder="e.g. Priya Sharma">
+      </div>
+      <div class="field-group">
+        <label>
+          <span class="kn">ಉದ್ಯೋಗಿ ಐಡಿ </span><span class="en">Employee ID </span>
+        </label>
+        <input type="text" id="empId" placeholder="e.g. EMP001">
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="field-group">
+        <label>
+          <span class="kn">ಘಟಕ </span><span class="en">Unit </span>
+        </label>
+        <input type="text" id="empUnit" placeholder="e.g. Production">
+      </div>
+      <div class="field-group">
+        <label>
+          <span class="kn">ದಿನಾಂಕ </span><span class="en">Date </span>
+        </label>
+        <input type="date" id="empDate">
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:1.2rem">
+      <span class="kn">ದೇಹ ಮಾಪನ · Body Measurements</span>
+      <span class="en">Body Measurements</span>
+    </div>
+
+    <div class="two-col">
+      <div class="field-group">
+        <label>
+          <span class="kn">ವಯಸ್ಸು </span><span class="en">Age </span>
+          <span style="font-style:italic;color:var(--muted);font-size:0.75rem;font-family:'Lora',serif">(years)</span>
+        </label>
+        <input type="number" id="age" placeholder="e.g. 35" min="15" max="100">
+      </div>
+      <div class="field-group">
+        <label>
+          <span class="kn">ತೂಕ </span><span class="en">Weight </span>
+          <span style="font-style:italic;color:var(--muted);font-size:0.75rem;font-family:'Lora',serif">(kg)</span>
+        </label>
+        <input type="number" id="weight" placeholder="e.g. 60" min="20" max="200" step="0.1">
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="field-group">
+        <label>
+          <span class="kn">ಎತ್ತರ </span><span class="en">Height </span>
+          <span style="font-style:italic;color:var(--muted);font-size:0.75rem;font-family:'Lora',serif">(cm)</span>
+        </label>
+        <input type="number" id="height" placeholder="e.g. 155" min="100" max="220">
+      </div>
+      <div class="field-group">
+        <label>
+          <span class="kn">ಸೊಂಟ </span><span class="en">Waist </span>
+          <span style="font-style:italic;color:var(--muted);font-size:0.75rem;font-family:'Lora',serif">(cm)</span>
+        </label>
+        <input type="number" id="waist" placeholder="e.g. 80" min="40" max="160" step="0.5">
+      </div>
+    </div>
+
+    <div class="field-group" style="max-width:48%">
+      <label>
+        <span class="kn">ತೊಡೆ </span><span class="en">Hip </span>
+        <span style="font-style:italic;color:var(--muted);font-size:0.75rem;font-family:'Lora',serif">(cm)</span>
+      </label>
+      <input type="number" id="hip" placeholder="e.g. 95" min="40" max="180" step="0.5">
+    </div>
+
+    <div class="section-label" style="margin-top:1.2rem">
+      <span class="kn">ರಕ್ತದೊತ್ತಡ · BP &amp; Pulse</span>
+      <span class="en">Blood Pressure &amp; Pulse</span>
+    </div>
+
+    <div class="bp-row">
+      <div class="field-group">
+        <label>
+          <span class="kn">ಮೇಲಿನ ಸಂಖ್ಯೆ</span><span class="en">Systolic</span>
+        </label>
+        <input type="number" id="systolic" placeholder="120" min="60" max="220">
+      </div>
+      <div class="field-group">
+        <label>
+          <span class="kn">ಕೆಳಗಿನ ಸಂಖ್ಯೆ</span><span class="en">Diastolic</span>
+        </label>
+        <input type="number" id="diastolic" placeholder="80" min="40" max="140">
+      </div>
+      <div class="field-group">
+        <label>
+          <span class="kn">ನಾಡಿ (bpm)</span><span class="en">Pulse (bpm)</span>
+        </label>
+        <input type="number" id="pulse" placeholder="72" min="30" max="200">
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:1.2rem">
+      <span class="kn">ನಮ್ಯತೆ &amp; ಸಮತೋಲನ · Flexibility &amp; Balance</span>
+      <span class="en">Flexibility &amp; Balance</span>
+    </div>
+
+    <div class="field-group">
+      <label>
+        <span class="kn">ಕಾಲ್ಬೆರಳು ಮುಟ್ಟಬಲ್ಲಿರಾ?</span>
+        <span class="en">Can you touch your toes?</span>
+      </label>
+      <div class="select-wrapper">
+        <select id="toeTouch">
+          <option value="" id="opt0">ಆಯ್ಕೆ ಮಾಡಿ / Select</option>
+          <option value="yes" id="optYes">ಹೌದು / Yes</option>
+          <option value="no"  id="optNo">ಇಲ್ಲ / No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>
+        <span class="kn">ಒಂದು ಕಾಲಿನ ಮೇಲೆ ನಿಂತ ಸೆಕೆಂಡ್</span>
+        <span class="en">Balance – seconds standing on one leg</span>
+      </label>
+      <input type="number" id="balance" placeholder="e.g. 8" min="0" max="120">
+    </div>
+
+    <p class="error-msg" id="errorMsg">
+      <span class="kn">⚠ ದಯವಿಟ್ಟು ಎಲ್ಲ ಮಾಹಿತಿ ನಮೂದಿಸಿ.</span>
+      <span class="en">⚠ Please fill in all fields.</span>
+    </p>
+
+    <button class="submit-btn" onclick="calculatePlan()">
+      <span class="kn">💜 ನನ್ನ ಆರೋಗ್ಯ ಯೋಜನೆ ಪಡೆಯಿರಿ</span>
+      <span class="en">💜 Get My Action Plan</span>
+    </button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-header">
+      <h3>
+        🌿 <span class="kn">ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಾರಾಂಶ</span>
+        <span class="en">Your Health Summary</span>
+      </h3>
+      <p>
+        <span class="kn">ನಿಮ್ಮ ಮಾಪನ ಆಧಾರದ ಮೇಲೆ · Based on your measurements</span>
+        <span class="en">Based on your measurements</span>
+      </p>
+    </div>
+
+    <div class="metrics-grid" id="metricsGrid"></div>
+
+    <div class="action-plan-card">
+      <h4>
+        💜 <span class="kn">ನಿಮ್ಮ ಕ್ರಿಯಾ ಯೋಜನೆ · Your Action Plan</span>
+        <span class="en">Your Action Plan</span>
+      </h4>
+      <div id="tipsList"></div>
+    </div>
+
+    <!-- REPORT & SAVE SECTION -->
+    <div class="report-section">
+      <h4>
+        <span class="kn">ವರದಿ ಮತ್ತು ಉಳಿಸಿ · Report &amp; Save</span>
+        <span class="en">Report &amp; Save</span>
+      </h4>
+      <p>
+        <span class="kn">ನಿಮ್ಮ ಆರೋಗ್ಯ ವರದಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ ಮತ್ತು ದಾಖಲೆಗೆ ಉಳಿಸಿ</span>
+        <span class="en">Download your health report and save to records</span>
+      </p>
+      <button class="report-btn" onclick="generateReport()">
+        <span class="kn">📄 ವರದಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</span>
+        <span class="en">📄 Download Report</span>
+      </button>
+      <br>
+      <button class="report-btn" style="background:linear-gradient(135deg,#2d7a4f,#5ab88a);" onclick="saveToSheets()">
+        <span class="kn">💾 ದಾಖಲೆಗೆ ಉಳಿಸಿ</span>
+        <span class="en">💾 Save to Records</span>
+      </button>
+      <div class="save-status" id="saveStatus"></div>
+    </div>
+
+    <!-- PRINTABLE REPORT (hidden, shown for print/download) -->
+    <div id="printableReport"></div>
+
+    <div class="disclaimer">
+      <strong>
+        <span class="kn">⚠ ಮಾಹಿತಿ ಉದ್ದೇಶ ಮಾತ್ರ · Disclaimer:</span>
+        <span class="en">⚠ Disclaimer:</span>
+      </strong><br>
+      <span class="kn">ಈ ಸಲಹೆಗಳು ಮಾಹಿತಿ ಉದ್ದೇಶಕ್ಕಾಗಿ ಮಾತ್ರ, ವೈದ್ಯಕೀಯ ಸಲಹೆ ಅಲ್ಲ. ಆರೋಗ್ಯ ಸಮಸ್ಯೆಗಳಿಗೆ ವೈದ್ಯರನ್ನು ಭೇಟಿ ಮಾಡಿ.</span>
+      <span class="en">These tips are for informational purposes only and are not medical advice. Please consult a doctor for any health concerns.</span>
+    </div>
+
+    <button class="reset-btn" onclick="resetForm()">
+      ↩ <span class="kn">ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ · Try Again</span>
+      <span class="en">Try Again</span>
+    </button>
+  </div>
+</main>
+
+<footer>
+  <strong>Spoorthy Integrated Solutions Private Limited</strong> &nbsp;·&nbsp; IWD 2026<br>
+  <em>
+    <span class="kn">ಮಹಿಳಾ ಆರೋಗ್ಯ ಉಪಕರಣ · </span>Women's Health Initiative
+  </em>
+</footer>
+
+<script>
+/* ── GLOBALS ── */
+let currentLang = 'kn';
+window._lastTips = null;
+window._lastMetrics = null;
+
+/* ── Set today's date as default ── */
+document.addEventListener('DOMContentLoaded', function() {
+  const dateInput = document.getElementById('empDate');
+  if (dateInput && !dateInput.value) {
+    dateInput.value = new Date().toISOString().split('T')[0];
+  }
+});
+
+/* ── LANGUAGE TOGGLE ── */
+function setLang(lang) {
+  currentLang = lang;
+  document.body.classList.toggle('lang-kn', lang === 'kn');
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.getElementById('btnKn').classList.toggle('active', lang === 'kn');
+  document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+
+  document.getElementById('opt0').textContent   = lang === 'kn' ? 'ಆಯ್ಕೆ ಮಾಡಿ / Select' : 'Select';
+  document.getElementById('optYes').textContent = lang === 'kn' ? 'ಹೌದು / Yes' : 'Yes';
+  document.getElementById('optNo').textContent  = lang === 'kn' ? 'ಇಲ್ಲ / No'  : 'No';
+
+  if (window._lastTips && document.getElementById('results').style.display !== 'none') {
+    renderTips(window._lastTips);
+  }
+}
+
+/* ── CALCULATION ── */
+function calculatePlan() {
+  const empName   = document.getElementById('empName').value.trim();
+  const empId     = document.getElementById('empId').value.trim();
+  const empUnit   = document.getElementById('empUnit').value.trim();
+  const empDate   = document.getElementById('empDate').value;
+  const age       = parseFloat(document.getElementById('age').value);
+  const weight    = parseFloat(document.getElementById('weight').value);
+  const height    = parseFloat(document.getElementById('height').value);
+  const waist     = parseFloat(document.getElementById('waist').value);
+  const hip       = parseFloat(document.getElementById('hip').value);
+  const systolic  = parseFloat(document.getElementById('systolic').value);
+  const diastolic = parseFloat(document.getElementById('diastolic').value);
+  const pulse     = parseFloat(document.getElementById('pulse').value);
+  const toeTouch  = document.getElementById('toeTouch').value;
+  const balance   = parseFloat(document.getElementById('balance').value);
+
+  const errEl = document.getElementById('errorMsg');
+  if (!empName || !empId || !empUnit || !empDate ||
+      !age || !weight || !height || !waist || !hip ||
+      !systolic || !diastolic || !pulse || !toeTouch || isNaN(balance)) {
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  const bmi = weight / ((height / 100) ** 2);
+  const whr = waist / hip;
+
+  const bmiClass   = bmi < 18.5 ? 'warn' : bmi < 25 ? 'good' : bmi < 30 ? 'warn' : 'bad';
+  const whrClass   = whr < 0.85 ? 'good' : 'warn';
+  const bpClass    = systolic < 120 && diastolic < 80 ? 'good' : (systolic >= 140 || diastolic >= 90) ? 'bad' : 'warn';
+  const pulseClass = pulse >= 60 && pulse <= 100 ? 'good' : 'warn';
+  const balClass   = balance >= 10 ? 'good' : 'warn';
+
+  const metrics = [
+    { val: bmi.toFixed(1),           lbl: 'BMI',             range: 'Normal: 18.5–24.9', cls: bmiClass },
+    { val: whr.toFixed(2),           lbl: 'Waist-Hip Ratio', range: 'Normal: < 0.85',    cls: whrClass },
+    { val: systolic+'/'+diastolic,   lbl: 'BP (mmHg)',       range: 'Normal: <120/80',   cls: bpClass  },
+    { val: String(pulse),            lbl: 'Pulse (bpm)',     range: 'Normal: 60–100',     cls: pulseClass },
+    { val: toeTouch==='yes'?'✓':'✗', lbl: 'Toe Touch',      range: 'Flexibility',        cls: toeTouch==='yes'?'good':'warn' },
+    { val: balance+'s',              lbl: 'Balance',         range: 'Normal: ≥10 sec',    cls: balClass },
+  ];
+
+  window._lastMetrics = metrics;
+  window._lastInputs  = { empName, empId, empUnit, empDate, age, weight, height, waist, hip, systolic, diastolic, pulse, toeTouch, balance, bmi, whr };
+
+  const grid = document.getElementById('metricsGrid');
+  grid.innerHTML = '';
+  metrics.forEach(m => {
+    grid.innerHTML += `<div class="metric-chip ${m.cls}">
+      <span class="val">${m.val}</span>
+      <span class="lbl">${m.lbl}</span>
+      <span class="range">${m.range}</span>
+    </div>`;
+  });
+
+  /* Build tips */
+  const tips = [];
+
+  if (bmi < 18.5)       tips.push({ k:'ತೂಕ ಕಡಿಮೆ. ದಿನಕ್ಕೊಮ್ಮೆ ಅನ್ನದ ಜೊತೆ 1 ಚಮಚ ಎಳ್ಳು ಅಥವಾ ಕಡಲೇಕಾಯಿ ಸೇರಿಸಿ.', e:'Underweight: Add 1 tbsp sesame/peanuts to rice daily.', icon:'🥜' });
+  else if (bmi < 25)    tips.push({ k:'ನಿಮ್ಮ ತೂಕ ಸರಿ ಇದೆ. ರಾಗಿ, ಸೊಪ್ಪು ಸೇವನೆ ಮುಂದುವರಿಸಿ.', e:'Healthy weight – keep eating ragi, greens.', icon:'🌿' });
+  else if (bmi < 30)    tips.push({ k:'ತೂಕ ಸ್ವಲ್ಪ ಹೆಚ್ಚು. ದಿನದ ಒಂದು ಚಹಾವನ್ನು ನಿಂಬೆ ನೀರಿನಿಂದ ಬದಲಿಸಿ.', e:'Overweight: Replace one chai with lemon water daily.', icon:'🍋' });
+  else                  tips.push({ k:'ತೂಕ ಅಧಿಕ. ದಿನಾ 10 ನಿಮಿಷ ಹೆಚ್ಚು ನಡೆಯಿರಿ, ಎಣ್ಣೆ ಕಡಿಮೆ ಮಾಡಿ.', e:'Obese: Walk 10 min extra, reduce oil.', icon:'🚶‍♀️' });
+
+  if (whr < 0.85)       tips.push({ k:'ಸೊಂಟದ ಗಾತ್ರ ಆರೋಗ್ಯಕರವಾಗಿದೆ.', e:'Healthy waist size.', icon:'✨' });
+  else                  tips.push({ k:'ಸೊಂಟ ಸುತ್ತ ಕೊಬ್ಬು ಹೆಚ್ಚು. ಬಸ್ ನಿರೀಕ್ಷೆಯಲ್ಲಿ ಹೊಟ್ಟೆ ಒಳಗೆ ಎಳೆದುಕೊಳ್ಳಿ (10 ಸೆಕೆಂಡ್, 5 ಬಾರಿ).', e:'High WHR: Pull stomach in while waiting – 10 sec, 5 reps.', icon:'🧘‍♀️' });
+
+  if (systolic < 120 && diastolic < 80)
+    tips.push({ k:'ರಕ್ತದೊತ್ತಡ ಉತ್ತಮವಾಗಿದೆ. ಉಪ್ಪು ಕಡಿಮೆ ಮಾಡಿ.', e:'BP excellent, reduce salt.', icon:'💚' });
+  else if ((systolic >= 120 && systolic <= 139) || (diastolic >= 80 && diastolic <= 89))
+    tips.push({ k:'ರಕ್ತದೊತ್ತಡ ಸ್ವಲ್ಪ ಹೆಚ್ಚು. ನೀರಿಗೆ ಅರ್ಧ ನಿಂಬೆ ಸೇರಿಸಿ, ಉಪ್ಪಿನಕಾಯಿ ಕಡಿಮೆ ಮಾಡಿ.', e:'Borderline BP: Add lemon to water, less pickle.', icon:'🍋' });
+  else
+    tips.push({ k:'ರಕ್ತದೊತ್ತಡ ಹೆಚ್ಚು. ಮಲಗುವ ಮುನ್ನ 4-4-4 ಉಸಿರಾಟ ಮಾಡಿ (4 ಸೆಕೆಂಡ್ ಉಸಿರೆಳೆದು, 4 ಹಿಡಿದು, 4 ಬಿಡಿ). ವೈದ್ಯರನ್ನು ಭೇಟಿ ಮಾಡಿ.', e:'High BP: 4-4-4 breathing before sleep, see doctor.', icon:'🩺' });
+
+  if (pulse >= 60 && pulse <= 100)
+    tips.push({ k:'ನಾಡಿಮಿಡಿತ ಸಾಮಾನ್ಯ. ನಡಿಗೆ ಮುಂದುವರಿಸಿ.', e:'Pulse normal, keep walking.', icon:'❤️' });
+  else
+    tips.push({ k:'ನಾಡಿಮಿಡಿತ ಹೆಚ್ಚು. ಮೆಟ್ಟಿಲು ಹತ್ತಿದ ಮೇಲೆ 3 ಆಳವಾದ ಉಸಿರು ಬಿಡಿ.', e:'High pulse: 3 deep breaths after exertion.', icon:'💨' });
+
+  if (toeTouch === 'yes')
+    tips.push({ k:'ಬೆನ್ನು ನಮ್ಯತೆ ಚೆನ್ನಾಗಿದೆ. ಪ್ರತಿದಿನ ಸ್ಟ್ರೆಚ್ ಮಾಡಿ.', e:'Good flexibility, keep stretching.', icon:'🤸' });
+  else
+    tips.push({ k:'ಬೆನ್ನು ಬಿಗಿಯಾಗಿದೆ. ಪ್ರತಿದಿನ ಬೆಳಿಗ್ಗೆ ಕಾಲ್ಬೆರಳು ಮುಟ್ಟಲು ಪ್ರಯತ್ನಿಸಿ, 10 ಸೆಕೆಂಡ್ ಹಿಡಿದುಕೊಳ್ಳಿ.', e:'Poor flexibility: Morning toe-touch stretch, hold 10 sec.', icon:'🧘' });
+
+  if (balance >= 10)
+    tips.push({ k:'ಸಮತೋಲನ ಉತ್ತಮ. ಕಣ್ಣು ಮುಚ್ಚಿ ಒಂದು ಕಾಲಿನ ಮೇಲೆ ನಿಲ್ಲಲು ಪ್ರಯತ್ನಿಸಿ.', e:'Great balance, try eyes closed.', icon:'⚖️' });
+  else
+    tips.push({ k:'ಸಮತೋಲನ ಕಡಿಮೆ. ಹಲ್ಲುಜ್ಜುವಾಗ ಒಂದು ಕಾಲಿನ ಮೇಲೆ 30 ಸೆಕೆಂಡ್ ನಿಲ್ಲಿ.', e:'Poor balance: Stand on one leg while brushing.', icon:'🦷' });
+
+  window._lastTips = tips;
+  renderTips(tips);
+
+  document.getElementById('saveStatus').textContent = '';
+  document.getElementById('formSection').style.display = 'none';
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'block';
+  resultsEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderTips(tips) {
+  const isEn = currentLang === 'en';
+  const list = document.getElementById('tipsList');
+  list.innerHTML = '';
+  tips.forEach(t => {
+    const primaryFont = isEn
+      ? "font-family:'Lora',serif;"
+      : "font-family:'Noto Sans Kannada',sans-serif;";
+    list.innerHTML += `
+      <div class="tip-item">
+        <span class="tip-icon">${t.icon}</span>
+        <div class="tip-primary" style="${primaryFont}">${isEn ? t.e : t.k}</div>
+        ${!isEn ? `<div class="tip-secondary">${t.e}</div>` : ''}
+      </div>`;
+  });
+}
+
+/* ── REPORT GENERATION ── */
+function generateReport() {
+  const inp = window._lastInputs;
+  const metrics = window._lastMetrics;
+  const tips = window._lastTips;
+  if (!inp || !metrics || !tips) return;
+
+  const dateFormatted = new Date(inp.empDate).toLocaleDateString('en-IN', {
+    day: '2-digit', month: 'long', year: 'numeric'
+  });
+
+  const reportHTML = `
+    <div class="report-container">
+      <div class="report-header">
+        <h2>Women's Health Assessment Report</h2>
+        <div class="company-name">Spoorthy Integrated Solutions Private Limited</div>
+        <div class="event-tag">International Women's Day 2026 Health Initiative</div>
+      </div>
+
+      <div class="report-employee-info">
+        <div class="info-item">
+          <span class="info-label">Name</span>
+          <span class="info-value">${inp.empName}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Employee ID</span>
+          <span class="info-value">${inp.empId}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Unit</span>
+          <span class="info-value">${inp.empUnit}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Date</span>
+          <span class="info-value">${dateFormatted}</span>
+        </div>
+      </div>
+
+      <div class="report-metrics-title">Health Metrics Summary</div>
+      <div class="report-metrics-grid">
+        ${metrics.map(m => `
+          <div class="report-metric ${m.cls}">
+            <span class="r-val">${m.val}</span>
+            <span class="r-lbl">${m.lbl}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="report-tips-title">Personalized Action Plan</div>
+      <ul class="report-tip-list">
+        ${tips.map(t => `<li>${t.icon} ${t.e}</li>`).join('')}
+      </ul>
+
+      <div class="report-footer">
+        <div class="disclaimer-text">
+          These tips are for informational purposes only and are not medical advice.
+          Please consult a doctor for any health concerns.
+        </div>
+        <div class="generated-at">
+          Report generated on ${new Date().toLocaleString('en-IN')} | Spoorthy Integrated Solutions Pvt Ltd
+        </div>
+      </div>
+    </div>
+  `;
+
+  const reportEl = document.getElementById('printableReport');
+  reportEl.innerHTML = reportHTML;
+  reportEl.style.display = 'block';
+
+  // Open print dialog for PDF download
+  setTimeout(() => window.print(), 300);
+}
+
+/* ── SAVE TO GOOGLE SHEETS ── */
+async function saveToSheets() {
+  const inp = window._lastInputs;
+  const metrics = window._lastMetrics;
+  const tips = window._lastTips;
+  if (!inp || !metrics || !tips) return;
+
+  const statusEl = document.getElementById('saveStatus');
+  statusEl.className = 'save-status';
+  statusEl.innerHTML = '<span class="kn">ಉಳಿಸಲಾಗುತ್ತಿದೆ...</span><span class="en">Saving...</span>';
+
+  try {
+    const payload = {
+      name: inp.empName,
+      employeeId: inp.empId,
+      unit: inp.empUnit,
+      date: inp.empDate,
+      age: inp.age,
+      weight: inp.weight,
+      height: inp.height,
+      waist: inp.waist,
+      hip: inp.hip,
+      systolic: inp.systolic,
+      diastolic: inp.diastolic,
+      pulse: inp.pulse,
+      toeTouch: inp.toeTouch,
+      balance: inp.balance,
+      bmi: inp.bmi.toFixed(1),
+      whr: inp.whr.toFixed(2),
+      tips: tips.map(t => t.e).join('; ')
+    };
+
+    const res = await fetch('/.netlify/functions/save-to-sheets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      statusEl.className = 'save-status success';
+      statusEl.innerHTML = '<span class="kn">✓ ಯಶಸ್ವಿಯಾಗಿ ಉಳಿಸಲಾಗಿದೆ!</span><span class="en">✓ Saved successfully!</span>';
+    } else {
+      throw new Error(data.error || 'Failed to save');
+    }
+  } catch (err) {
+    statusEl.className = 'save-status error';
+    statusEl.innerHTML = `<span class="kn">✗ ಉಳಿಸಲು ವಿಫಲ: ${err.message}</span><span class="en">✗ Save failed: ${err.message}</span>`;
+  }
+}
+
+function resetForm() {
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('printableReport').innerHTML = '';
+  document.getElementById('printableReport').style.display = 'none';
+  window._lastTips = null;
+  window._lastMetrics = null;
+  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
